@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         Title="Keyboard Mouse Overlay"
+        Icon="/KeyboardMouseOverlay;component/KeyViewerIcon.png"
         Height="440"
         Width="500"
         WindowStartupLocation="CenterScreen"

@@ -7,6 +7,12 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
     <UseWindowsForms>true</UseWindowsForms>
+    <ApplicationIcon>KeyboardMouseOverlay.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="KeyViewerIcon.png" />
+    <Resource Include="KeyViewerIcon.png" />
+  </ItemGroup>
 
 </Project>

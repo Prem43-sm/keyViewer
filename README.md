@@ -23,7 +23,7 @@ Click **Start Overlay** to install the global input hooks. Click **Stop Overlay*
 - Global keyboard monitoring for key presses and modifier combinations
 - Left, right, and middle click indicators; double-click recognition; vertical wheel indicators
 - A topmost, click-through overlay positioned near the cursor and kept within the cursor's monitor
-- Adjustable text size, opacity, and display duration
+- Adjustable text size, opacity, display duration, and signed X/Y cursor distance (from -200 to +200 pixels)
 - Local JSON settings stored beside the application
 
 The overlay observes input only. It does not synthesize input or store typed content. Input hooks are removed when monitoring is stopped or the application exits.

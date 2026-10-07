@@ -26,6 +26,10 @@ public partial class MainWindow : Window
         TextSizeSlider.Value = _settings.TextSize;
         OpacitySlider.Value = _settings.Opacity;
         DisplayDurationSlider.Value = _settings.DisplayDurationSeconds;
+        HorizontalOffsetSlider.Value = _settings.HorizontalOffset;
+        VerticalOffsetSlider.Value = _settings.VerticalOffset;
+        UpdateDistanceLabels();
+        DisplayDurationValueText.Text = $"{_settings.DisplayDurationSeconds:0.0} s";
 
         ToggleButton.Content = "Start Overlay";
         StatusText.Text = "Status: Stopped";
@@ -117,6 +121,47 @@ public partial class MainWindow : Window
 
         _settings.DisplayDurationSeconds = DisplayDurationSlider.Value;
         SettingsService.Save(_settings);
+        if (DisplayDurationValueText is not null)
+        {
+            DisplayDurationValueText.Text = $"{_settings.DisplayDurationSeconds:0.0} s";
+        }
+    }
+
+    private void HorizontalOffsetSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+    {
+        if (_settings is null)
+        {
+            return;
+        }
+
+        _settings.HorizontalOffset = HorizontalOffsetSlider.Value;
+        SettingsService.Save(_settings);
+        UpdateDistanceLabels();
+    }
+
+    private void VerticalOffsetSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+    {
+        if (_settings is null)
+        {
+            return;
+        }
+
+        _settings.VerticalOffset = VerticalOffsetSlider.Value;
+        SettingsService.Save(_settings);
+        UpdateDistanceLabels();
+    }
+
+    private void UpdateDistanceLabels()
+    {
+        if (HorizontalOffsetValueText is not null)
+        {
+            HorizontalOffsetValueText.Text = $"{_settings.HorizontalOffset:+0;-0;0} px";
+        }
+
+        if (VerticalOffsetValueText is not null)
+        {
+            VerticalOffsetValueText.Text = $"{_settings.VerticalOffset:+0;-0;0} px";
+        }
     }
 
     protected override void OnClosed(EventArgs e)

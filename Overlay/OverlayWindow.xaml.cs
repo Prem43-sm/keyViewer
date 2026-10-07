@@ -72,28 +72,41 @@ public partial class OverlayWindow : Window
 
         var bounds = screen?.Bounds ?? new Rectangle(0, 0, (int)SystemParameters.PrimaryScreenWidth, (int)SystemParameters.PrimaryScreenHeight);
 
-        var left = cursorX + _settings.HorizontalOffset;
-        var top = cursorY + _settings.VerticalOffset;
+        var horizontalOffset = _settings.HorizontalOffset;
+        var verticalOffset = _settings.VerticalOffset;
+        var left = cursorX + horizontalOffset - (horizontalOffset < 0 ? labelWidth : 0);
+        var top = cursorY + verticalOffset - (verticalOffset < 0 ? labelHeight : 0);
 
         if (left + labelWidth > bounds.Right)
         {
-            left = cursorX - labelWidth - _settings.HorizontalOffset;
-        }
-
-        if (top + labelHeight > bounds.Bottom)
-        {
-            top = cursorY - labelHeight - _settings.VerticalOffset;
+            left = horizontalOffset >= 0
+                ? cursorX - labelWidth - horizontalOffset
+                : bounds.Right - labelWidth;
         }
 
         if (left < bounds.Left)
         {
-            left = bounds.Left;
+            left = horizontalOffset < 0
+                ? cursorX + Math.Abs(horizontalOffset)
+                : bounds.Left;
+        }
+
+        if (top + labelHeight > bounds.Bottom)
+        {
+            top = verticalOffset >= 0
+                ? cursorY - labelHeight - verticalOffset
+                : bounds.Bottom - labelHeight;
         }
 
         if (top < bounds.Top)
         {
-            top = bounds.Top + 8;
+            top = verticalOffset < 0
+                ? cursorY + Math.Abs(verticalOffset)
+                : bounds.Top;
         }
+
+        left = Math.Clamp(left, bounds.Left, Math.Max(bounds.Left, bounds.Right - labelWidth));
+        top = Math.Clamp(top, bounds.Top, Math.Max(bounds.Top, bounds.Bottom - labelHeight));
 
         Left = left;
         Top = top;

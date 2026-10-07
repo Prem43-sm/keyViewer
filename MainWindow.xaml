@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         Title="Keyboard Mouse Overlay"
-        Height="330"
-        Width="460"
+        Height="440"
+        Width="500"
         WindowStartupLocation="CenterScreen"
         ResizeMode="CanMinimize">
     <Grid Margin="18">
@@ -61,9 +61,33 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="120"/>
                         <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="54"/>
                     </Grid.ColumnDefinitions>
                     <TextBlock Text="Display time" VerticalAlignment="Center" Foreground="#374151"/>
                     <Slider x:Name="DisplayDurationSlider" Grid.Column="1" Minimum="0.6" Maximum="3" Value="1.2" TickPlacement="BottomRight" ValueChanged="DisplayDurationSlider_ValueChanged"/>
+                    <TextBlock x:Name="DisplayDurationValueText" Grid.Column="2" Text="1.2 s" VerticalAlignment="Center" HorizontalAlignment="Right" Foreground="#374151"/>
+                </Grid>
+
+                <Grid Margin="0,6,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="120"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="54"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="X distance" VerticalAlignment="Center" Foreground="#374151"/>
+                    <Slider x:Name="HorizontalOffsetSlider" Grid.Column="1" Minimum="-200" Maximum="200" Value="18" TickFrequency="1" IsSnapToTickEnabled="True" ValueChanged="HorizontalOffsetSlider_ValueChanged"/>
+                    <TextBlock x:Name="HorizontalOffsetValueText" Grid.Column="2" Text="+18 px" VerticalAlignment="Center" HorizontalAlignment="Right" Foreground="#374151"/>
+                </Grid>
+
+                <Grid Margin="0,6,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="120"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="54"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="Y distance" VerticalAlignment="Center" Foreground="#374151"/>
+                    <Slider x:Name="VerticalOffsetSlider" Grid.Column="1" Minimum="-200" Maximum="200" Value="18" TickFrequency="1" IsSnapToTickEnabled="True" ValueChanged="VerticalOffsetSlider_ValueChanged"/>
+                    <TextBlock x:Name="VerticalOffsetValueText" Grid.Column="2" Text="+18 px" VerticalAlignment="Center" HorizontalAlignment="Right" Foreground="#374151"/>
                 </Grid>
             </StackPanel>
         </Border>

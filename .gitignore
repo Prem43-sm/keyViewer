@@ -4,3 +4,5 @@ obj/
 settings.json
 *.user
 *.suo
+artifacts/
+dist/

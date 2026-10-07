@@ -6,8 +6,8 @@ A lightweight Windows WPF utility that displays keyboard shortcuts, mouse clicks
 
 ## Requirements
 
-- Windows 10 or 11
-- .NET 8 SDK
+- Windows 10 or 11 (64-bit)
+- .NET 8 SDK to build from source
 
 ## Build and run
 
@@ -19,6 +19,16 @@ dotnet run
 ```
 
 Click **Start Overlay** to install the global input hooks. Click **Stop Overlay** to remove them. The settings window can be minimized while the overlay is active.
+
+## Create a setup executable
+
+Install [Inno Setup 6](https://jrsoftware.org/isinfo.php), then run this PowerShell command from the project directory:
+
+```powershell
+.\installer\Build-Installer.ps1
+```
+
+The self-contained Windows x64 installer is created at `dist\KeyboardMouseOverlaySetup.exe`. Share that file with your friends; they do not need to install .NET. The installer creates a desktop shortcut and a Start menu shortcut, and offers to launch the app when installation finishes. It installs for the current Windows user and does not require administrator access.
 
 ## Current features
 
@@ -32,4 +42,4 @@ The overlay observes input only. It does not synthesize input or store typed con
 
 ## Limitations
 
-This is the initial implementation. It currently has a basic settings window and dark overlay style; profiles, advanced filtering, animation, and installer packaging are not implemented yet. Verify overlay capture behavior in the specific OBS capture mode used for a recording.
+This is the initial implementation. It currently has a basic settings window and dark overlay style; profiles and advanced filtering are not implemented yet. Verify overlay capture behavior in the specific OBS capture mode used for a recording.

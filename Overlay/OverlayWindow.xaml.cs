@@ -17,6 +17,7 @@ public partial class OverlayWindow : Window
 
     private readonly OverlaySettings _settings;
     private readonly DispatcherTimer _hideTimer;
+    private readonly DispatcherTimer _cursorTrackingTimer;
 
     public OverlayWindow(OverlaySettings settings)
     {
@@ -24,6 +25,8 @@ public partial class OverlayWindow : Window
         _settings = settings;
         _hideTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(settings.DisplayDurationSeconds) };
         _hideTimer.Tick += (_, _) => Hide();
+        _cursorTrackingTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(16) };
+        _cursorTrackingTimer.Tick += TrackCursor;
         SourceInitialized += OnSourceInitialized;
     }
 
@@ -52,6 +55,20 @@ public partial class OverlayWindow : Window
         {
             Topmost = true;
         }
+
+        _cursorTrackingTimer.Start();
+    }
+
+    public new void Hide()
+    {
+        _cursorTrackingTimer.Stop();
+        base.Hide();
+    }
+
+    private void TrackCursor(object? sender, EventArgs e)
+    {
+        var cursorPosition = System.Windows.Forms.Cursor.Position;
+        SetPosition(cursorPosition.X, cursorPosition.Y);
     }
 
     private void UpdateWindowStyle()
@@ -130,6 +147,13 @@ public partial class OverlayWindow : Window
 
         var exStyle = NativeMethods.GetWindowLong(handle, GwlExstyle);
         NativeMethods.SetWindowLong(handle, GwlExstyle, exStyle | WsExTransparent | WsExLayered | WsExNoActivate);
+    }
+
+    protected override void OnClosed(EventArgs e)
+    {
+        _hideTimer.Stop();
+        _cursorTrackingTimer.Stop();
+        base.OnClosed(e);
     }
 
     private static class NativeMethods

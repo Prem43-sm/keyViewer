@@ -62,56 +62,61 @@ public partial class OverlayWindow : Window
 
     private void SetPosition(double cursorX, double cursorY)
     {
-        ActionText.Measure(new global::System.Windows.Size(double.PositiveInfinity, double.PositiveInfinity));
+        new WindowInteropHelper(this).EnsureHandle();
+        var transformFromDevice = PresentationSource.FromVisual(this)?.CompositionTarget?.TransformFromDevice
+            ?? System.Windows.Media.Matrix.Identity;
 
-        var labelWidth = ActionText.DesiredSize.Width + 28;
-        var labelHeight = ActionText.DesiredSize.Height + 28;
+        MainBorder.Measure(new global::System.Windows.Size(double.PositiveInfinity, double.PositiveInfinity));
+        var labelWidth = Math.Ceiling(MainBorder.DesiredSize.Width);
+        var labelHeight = Math.Ceiling(MainBorder.DesiredSize.Height);
 
         var screen = Screen.AllScreens
             .FirstOrDefault(s => s.Bounds.Contains((int)cursorX, (int)cursorY)) ?? Screen.PrimaryScreen ?? Screen.AllScreens.FirstOrDefault();
 
         var bounds = screen?.Bounds ?? new Rectangle(0, 0, (int)SystemParameters.PrimaryScreenWidth, (int)SystemParameters.PrimaryScreenHeight);
+        var cursor = transformFromDevice.Transform(new global::System.Windows.Point(cursorX, cursorY));
+        var screenTopLeft = transformFromDevice.Transform(new global::System.Windows.Point(bounds.Left, bounds.Top));
+        var screenBottomRight = transformFromDevice.Transform(new global::System.Windows.Point(bounds.Right, bounds.Bottom));
+        var horizontalOffset = transformFromDevice.Transform(new global::System.Windows.Vector(_settings.HorizontalOffset, 0)).X;
+        var verticalOffset = transformFromDevice.Transform(new global::System.Windows.Vector(0, _settings.VerticalOffset)).Y;
 
-        var horizontalOffset = _settings.HorizontalOffset;
-        var verticalOffset = _settings.VerticalOffset;
-        var left = cursorX + horizontalOffset - (horizontalOffset < 0 ? labelWidth : 0);
-        var top = cursorY + verticalOffset - (verticalOffset < 0 ? labelHeight : 0);
-
-        if (left + labelWidth > bounds.Right)
-        {
-            left = horizontalOffset >= 0
-                ? cursorX - labelWidth - horizontalOffset
-                : bounds.Right - labelWidth;
-        }
-
-        if (left < bounds.Left)
-        {
-            left = horizontalOffset < 0
-                ? cursorX + Math.Abs(horizontalOffset)
-                : bounds.Left;
-        }
-
-        if (top + labelHeight > bounds.Bottom)
-        {
-            top = verticalOffset >= 0
-                ? cursorY - labelHeight - verticalOffset
-                : bounds.Bottom - labelHeight;
-        }
-
-        if (top < bounds.Top)
-        {
-            top = verticalOffset < 0
-                ? cursorY + Math.Abs(verticalOffset)
-                : bounds.Top;
-        }
-
-        left = Math.Clamp(left, bounds.Left, Math.Max(bounds.Left, bounds.Right - labelWidth));
-        top = Math.Clamp(top, bounds.Top, Math.Max(bounds.Top, bounds.Bottom - labelHeight));
+        var left = GetAxisPosition(
+            cursor.X,
+            labelWidth,
+            screenTopLeft.X,
+            screenBottomRight.X,
+            horizontalOffset);
+        var top = GetAxisPosition(
+            cursor.Y,
+            labelHeight,
+            screenTopLeft.Y,
+            screenBottomRight.Y,
+            verticalOffset);
 
         Left = left;
         Top = top;
         Width = labelWidth;
         Height = labelHeight;
+    }
+
+    private static double GetAxisPosition(double cursor, double labelLength, double screenStart, double screenEnd, double offset)
+    {
+        var gap = Math.Abs(offset);
+        var preferredPosition = offset >= 0 ? cursor + gap : cursor - gap - labelLength;
+        var alternatePosition = offset >= 0 ? cursor - gap - labelLength : cursor + gap;
+        var maxPosition = screenEnd - labelLength;
+
+        if (preferredPosition >= screenStart && preferredPosition <= maxPosition)
+        {
+            return preferredPosition;
+        }
+
+        if (alternatePosition >= screenStart && alternatePosition <= maxPosition)
+        {
+            return alternatePosition;
+        }
+
+        return Math.Clamp(preferredPosition, screenStart, Math.Max(screenStart, maxPosition));
     }
 
     private void OnSourceInitialized(object? sender, EventArgs e)

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         Title="KeyViewer"
-        Icon="/KeyboardMouseOverlay;component/KV.png"
+        Icon="/KeyboardMouseOverlay;component/KV.ico"
         Width="680"
         Height="720"
         MinWidth="640"

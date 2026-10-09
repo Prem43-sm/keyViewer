@@ -1,6 +1,6 @@
-#define AppName "Keyboard Mouse Overlay"
+#define AppName "KeyViewer"
 #define AppVersion "1.0.0"
-#define AppPublisher "Keyboard Mouse Overlay"
+#define AppPublisher "KeyViewer"
 #define AppExeName "KeyboardMouseOverlay.exe"
 #define PublishDir "..\artifacts\publish\win-x64"
 
@@ -9,7 +9,7 @@ AppId={{A71FAD04-EE14-4FF4-BE81-241EA6605120}
 AppName={#AppName}
 AppVersion={#AppVersion}
 AppPublisher={#AppPublisher}
-DefaultDirName={localappdata}\Programs\Keyboard Mouse Overlay
+DefaultDirName={localappdata}\Programs\KeyViewer
 DefaultGroupName={#AppName}
 DisableProgramGroupPage=yes
 PrivilegesRequired=lowest

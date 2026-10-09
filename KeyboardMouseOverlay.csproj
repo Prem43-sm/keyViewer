@@ -12,7 +12,9 @@
 
   <ItemGroup>
     <None Remove="KeyViewerIcon.png" />
+    <None Remove="KV.png" />
     <Resource Include="KeyViewerIcon.png" />
+    <Resource Include="KV.png" />
   </ItemGroup>
 
 </Project>

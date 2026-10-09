@@ -1,4 +1,5 @@
 using System.Windows;
+using System.Windows.Media;
 using KeyboardMouseOverlay.Core;
 using KeyboardMouseOverlay.Models;
 using KeyboardMouseOverlay.Overlay;
@@ -30,9 +31,11 @@ public partial class MainWindow : Window
         VerticalOffsetSlider.Value = _settings.VerticalOffset;
         UpdateDistanceLabels();
         DisplayDurationValueText.Text = $"{_settings.DisplayDurationSeconds:0.0} s";
+        TextSizeValueText.Text = $"{_settings.TextSize:0} px";
+        OpacityValueText.Text = $"{_settings.Opacity:P0}";
 
         ToggleButton.Content = "Start Overlay";
-        StatusText.Text = "Status: Stopped";
+        SetStatus("Overlay stopped", "#475569");
         _overlayWindow.Hide();
     }
 
@@ -59,15 +62,15 @@ public partial class MainWindow : Window
             _inputMonitor.Start();
             _isRunning = true;
             ToggleButton.Content = "Stop Overlay";
-            StatusText.Text = "Status: Running";
+            SetStatus("Overlay running", "#15803D");
             _settings.OverlayEnabled = true;
             SettingsService.Save(_settings);
         }
         catch (Exception ex)
         {
-            global::System.Windows.MessageBox.Show($"Unable to start the global hook: {ex.Message}", "Keyboard Mouse Overlay", MessageBoxButton.OK, MessageBoxImage.Warning);
+            global::System.Windows.MessageBox.Show($"Unable to start the global hook: {ex.Message}", "KeyViewer", MessageBoxButton.OK, MessageBoxImage.Warning);
             _isRunning = false;
-            StatusText.Text = "Status: Start failed";
+            SetStatus("Start failed", "#B91C1C");
         }
     }
 
@@ -76,7 +79,7 @@ public partial class MainWindow : Window
         _inputMonitor.Stop();
         _isRunning = false;
         ToggleButton.Content = "Start Overlay";
-        StatusText.Text = "Status: Stopped";
+        SetStatus("Overlay stopped", "#475569");
         _overlayWindow.Hide();
     }
 
@@ -99,6 +102,10 @@ public partial class MainWindow : Window
 
         _settings.TextSize = TextSizeSlider.Value;
         SettingsService.Save(_settings);
+        if (TextSizeValueText is not null)
+        {
+            TextSizeValueText.Text = $"{_settings.TextSize:0} px";
+        }
     }
 
     private void OpacitySlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -110,6 +117,10 @@ public partial class MainWindow : Window
 
         _settings.Opacity = OpacitySlider.Value;
         SettingsService.Save(_settings);
+        if (OpacityValueText is not null)
+        {
+            OpacityValueText.Text = $"{_settings.Opacity:P0}";
+        }
     }
 
     private void DisplayDurationSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -162,6 +173,12 @@ public partial class MainWindow : Window
         {
             VerticalOffsetValueText.Text = $"{_settings.VerticalOffset:+0;-0;0} px";
         }
+    }
+
+    private void SetStatus(string statusText, string colorHex)
+    {
+        StatusText.Text = statusText;
+        StatusText.Foreground = new SolidColorBrush((System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString(colorHex)!);
     }
 
     protected override void OnClosed(EventArgs e)

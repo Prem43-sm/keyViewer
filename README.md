@@ -1,6 +1,6 @@
-# Keyboard Mouse Overlay
+# KeyViewer
 
-![Keyboard Mouse Overlay app icon](./KeyViewerIcon.png)
+![KeyViewer app icon](./KV.png)
 
 A lightweight Windows WPF utility that displays keyboard shortcuts, mouse clicks, and scroll actions near the cursor for screen recordings.
 

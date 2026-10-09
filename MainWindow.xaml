@@ -6,34 +6,41 @@
         mc:Ignorable="d"
         Title="KeyViewer"
         Icon="/KeyboardMouseOverlay;component/KV.png"
-        Width="620"
-        Height="540"
-        MinWidth="560"
-        MinHeight="480"
+        Width="680"
+        Height="720"
+        MinWidth="640"
+        MinHeight="520"
         WindowStartupLocation="CenterScreen"
-        ResizeMode="CanMinimize">
+        ResizeMode="CanResize"
+        Background="#0B1120"
+        Foreground="#F1F5F9">
     <Window.Resources>
-        <Style x:Key="PrimaryButtonStyle" TargetType="Button">
+        <Style x:Key="PrimaryButtonStyle" TargetType="{x:Type Button}">
             <Setter Property="Background" Value="#2563EB"/>
-            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Foreground" Value="#FFFFFF"/>
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}"
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border x:Name="ButtonBorder"
+                                Background="{TemplateBinding Background}"
                                 CornerRadius="8"
                                 SnapsToDevicePixels="True">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="#1D4ED8"/>
+                                <Setter TargetName="ButtonBorder" Property="Background" Value="#3B82F6"/>
                             </Trigger>
                             <Trigger Property="IsPressed" Value="True">
-                                <Setter Property="Background" Value="#1E40AF"/>
+                                <Setter TargetName="ButtonBorder" Property="Background" Value="#1D4ED8"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="ButtonBorder" Property="Background" Value="#334155"/>
+                                <Setter Property="Foreground" Value="#94A3B8"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -41,18 +48,19 @@
             </Setter>
         </Style>
 
-        <Style x:Key="SecondaryButtonStyle" TargetType="Button">
-            <Setter Property="Background" Value="#F8FAFC"/>
-            <Setter Property="Foreground" Value="#334155"/>
+        <Style x:Key="SecondaryButtonStyle" TargetType="{x:Type Button}">
+            <Setter Property="Background" Value="#1E293B"/>
+            <Setter Property="Foreground" Value="#E2E8F0"/>
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
-            <Setter Property="BorderBrush" Value="#E2E8F0"/>
+            <Setter Property="BorderBrush" Value="#2B3850"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}"
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border x:Name="ButtonBorder"
+                                Background="{TemplateBinding Background}"
                                 BorderBrush="{TemplateBinding BorderBrush}"
                                 BorderThickness="{TemplateBinding BorderThickness}"
                                 CornerRadius="8"
@@ -61,131 +69,329 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="#EEF2FF"/>
+                                <Setter TargetName="ButtonBorder" Property="Background" Value="#29374D"/>
+                                <Setter TargetName="ButtonBorder" Property="BorderBrush" Value="#3B82F6"/>
                             </Trigger>
                             <Trigger Property="IsPressed" Value="True">
-                                <Setter Property="Background" Value="#E2E8F0"/>
+                                <Setter TargetName="ButtonBorder" Property="Background" Value="#334155"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <Style TargetType="{x:Type Slider}">
+            <Setter Property="MinHeight" Value="36"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Focusable" Value="True"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Slider}">
+                        <Grid Height="36" Background="Transparent">
+                            <Track x:Name="PART_Track"
+                                   Minimum="{TemplateBinding Minimum}"
+                                   Maximum="{TemplateBinding Maximum}"
+                                   Value="{TemplateBinding Value}"
+                                   IsDirectionReversed="{TemplateBinding IsDirectionReversed}">
+                                <Track.DecreaseRepeatButton>
+                                    <RepeatButton Command="{x:Static Slider.DecreaseLarge}"
+                                                  Focusable="False"
+                                                  IsTabStop="False"
+                                                  Height="4">
+                                        <RepeatButton.Template>
+                                            <ControlTemplate TargetType="{x:Type RepeatButton}">
+                                                <Border Height="4" Background="#3B82F6" CornerRadius="2"/>
+                                            </ControlTemplate>
+                                        </RepeatButton.Template>
+                                    </RepeatButton>
+                                </Track.DecreaseRepeatButton>
+                                <Track.Thumb>
+                                    <Thumb x:Name="SliderThumb" Width="16" Height="16" Focusable="False">
+                                        <Thumb.Template>
+                                            <ControlTemplate TargetType="{x:Type Thumb}">
+                                                <Border x:Name="ThumbBorder"
+                                                        Background="#3B82F6"
+                                                        BorderBrush="#CBD5E1"
+                                                        BorderThickness="2"
+                                                        CornerRadius="8"/>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter TargetName="ThumbBorder" Property="Background" Value="#60A5FA"/>
+                                                    </Trigger>
+                                                    <Trigger Property="IsDragging" Value="True">
+                                                        <Setter TargetName="ThumbBorder" Property="Background" Value="#93C5FD"/>
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Thumb.Template>
+                                    </Thumb>
+                                </Track.Thumb>
+                                <Track.IncreaseRepeatButton>
+                                    <RepeatButton Command="{x:Static Slider.IncreaseLarge}"
+                                                  Focusable="False"
+                                                  IsTabStop="False"
+                                                  Height="4">
+                                        <RepeatButton.Template>
+                                            <ControlTemplate TargetType="{x:Type RepeatButton}">
+                                                <Border Height="4" Background="#334155" CornerRadius="2"/>
+                                            </ControlTemplate>
+                                        </RepeatButton.Template>
+                                    </RepeatButton>
+                                </Track.IncreaseRepeatButton>
+                            </Track>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Window.Resources>
 
-    <Grid Background="#F4F7FB">
-        <Border Margin="22" Background="#FFFFFF" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="18">
-            <Grid Margin="22">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
+    <ScrollViewer VerticalScrollBarVisibility="Auto"
+                  HorizontalScrollBarVisibility="Disabled"
+                  CanContentScroll="False">
+        <Grid Background="#0B1120">
+            <Border Margin="18"
+                    Background="#111827"
+                    BorderBrush="#2B3850"
+                    BorderThickness="1"
+                    CornerRadius="18">
+                <Grid Margin="22">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
 
-                <Grid Grid.Row="0" Margin="0,0,0,18">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
+                    <Grid Grid.Row="0" Margin="0,0,0,18">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
 
-                    <Border Width="42" Height="42" Background="#EAF1FF" CornerRadius="12">
-                        <Image Source="/KeyboardMouseOverlay;component/KV.png" Width="28" Height="28" Stretch="Uniform"/>
+                        <Border Width="42" Height="42" Background="#1E293B" CornerRadius="12">
+                            <Image Source="/KeyboardMouseOverlay;component/KV.png"
+                                   Width="28"
+                                   Height="28"
+                                   Stretch="Uniform"/>
+                        </Border>
+
+                        <StackPanel Grid.Column="1" Margin="14,0,0,0" VerticalAlignment="Center">
+                            <TextBlock Text="KeyViewer"
+                                       FontSize="30"
+                                       FontWeight="SemiBold"
+                                       Foreground="#F1F5F9"/>
+                            <TextBlock Margin="0,4,0,0"
+                                       Text="Show your keyboard and mouse actions while recording."
+                                       Foreground="#A7B4C8"
+                                       FontSize="13"
+                                       TextWrapping="Wrap"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <Border Grid.Row="1"
+                            Background="#1E293B"
+                            BorderBrush="#2B3850"
+                            BorderThickness="1"
+                            CornerRadius="10"
+                            Padding="12,10"
+                            Margin="0,0,0,18">
+                        <StackPanel Orientation="Horizontal">
+                            <Ellipse x:Name="StatusIndicator"
+                                     Width="8"
+                                     Height="8"
+                                     Fill="#64748B"
+                                     Margin="0,0,10,0"
+                                     VerticalAlignment="Center"/>
+                            <TextBlock x:Name="StatusText"
+                                       Text="Overlay stopped"
+                                       Foreground="#A7B4C8"
+                                       FontSize="14"
+                                       FontWeight="SemiBold"
+                                       VerticalAlignment="Center"/>
+                        </StackPanel>
                     </Border>
 
-                    <StackPanel Grid.Column="1" Margin="14,0,0,0" VerticalAlignment="Center">
-                        <TextBlock Text="KeyViewer" FontSize="30" FontWeight="SemiBold" Foreground="#111827"/>
-                        <TextBlock Margin="0,4,0,0" Text="Show your keyboard and mouse actions while recording." Foreground="#475569" FontSize="13"/>
+                    <StackPanel Grid.Row="2"
+                                Orientation="Horizontal"
+                                Margin="0,0,0,18">
+                        <Button x:Name="ToggleButton"
+                                Width="170"
+                                Height="42"
+                                Content="Start Overlay"
+                                Style="{StaticResource PrimaryButtonStyle}"
+                                Click="ToggleButton_Click"/>
+                        <Button Width="96"
+                                Height="42"
+                                Margin="12,0,0,0"
+                                Content="Exit"
+                                Style="{StaticResource SecondaryButtonStyle}"
+                                Click="ExitButton_Click"/>
                     </StackPanel>
+
+                    <Border Grid.Row="3"
+                            BorderThickness="1"
+                            BorderBrush="#2B3850"
+                            CornerRadius="14"
+                            Padding="18"
+                            Background="#172033">
+                        <StackPanel>
+                            <TextBlock Text="Display"
+                                       FontSize="17"
+                                       FontWeight="SemiBold"
+                                       Foreground="#F1F5F9"
+                                       Margin="0,0,0,8"/>
+                            <TextBlock Text="Configure how actions appear next to your cursor."
+                                       Foreground="#A7B4C8"
+                                       FontSize="12"
+                                       Margin="0,0,0,14"
+                                       TextWrapping="Wrap"/>
+
+                            <Grid MinHeight="40" Margin="0,2,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="184"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="70"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Text size"
+                                           VerticalAlignment="Center"
+                                           Foreground="#D5DEEB"
+                                           FontSize="13"/>
+                                <Slider x:Name="TextSizeSlider"
+                                        Grid.Column="1"
+                                        Minimum="18"
+                                        Maximum="42"
+                                        Value="28"
+                                        TickPlacement="BottomRight"
+                                        IsSnapToTickEnabled="True"
+                                        ValueChanged="TextSizeSlider_ValueChanged"/>
+                                <TextBlock x:Name="TextSizeValueText"
+                                           Grid.Column="2"
+                                           Text="28 px"
+                                           Foreground="#A7B4C8"
+                                           FontSize="12"
+                                           VerticalAlignment="Center"
+                                           HorizontalAlignment="Right"/>
+                            </Grid>
+
+                            <Grid MinHeight="40" Margin="0,6,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="184"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="70"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Opacity"
+                                           VerticalAlignment="Center"
+                                           Foreground="#D5DEEB"
+                                           FontSize="13"/>
+                                <Slider x:Name="OpacitySlider"
+                                        Grid.Column="1"
+                                        Minimum="0.4"
+                                        Maximum="1"
+                                        Value="0.9"
+                                        TickPlacement="BottomRight"
+                                        ValueChanged="OpacitySlider_ValueChanged"/>
+                                <TextBlock x:Name="OpacityValueText"
+                                           Grid.Column="2"
+                                           Text="90%"
+                                           Foreground="#A7B4C8"
+                                           FontSize="12"
+                                           VerticalAlignment="Center"
+                                           HorizontalAlignment="Right"/>
+                            </Grid>
+
+                            <Grid MinHeight="40" Margin="0,6,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="184"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="70"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Display duration"
+                                           VerticalAlignment="Center"
+                                           Foreground="#D5DEEB"
+                                           FontSize="13"/>
+                                <Slider x:Name="DisplayDurationSlider"
+                                        Grid.Column="1"
+                                        Minimum="0.6"
+                                        Maximum="3"
+                                        Value="1.2"
+                                        TickPlacement="BottomRight"
+                                        ValueChanged="DisplayDurationSlider_ValueChanged"/>
+                                <TextBlock x:Name="DisplayDurationValueText"
+                                           Grid.Column="2"
+                                           Text="1.2 s"
+                                           VerticalAlignment="Center"
+                                           HorizontalAlignment="Right"
+                                           Foreground="#A7B4C8"
+                                           FontSize="12"/>
+                            </Grid>
+
+                            <Grid MinHeight="40" Margin="0,6,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="184"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="70"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Horizontal offset (X)"
+                                           VerticalAlignment="Center"
+                                           Foreground="#D5DEEB"
+                                           FontSize="13"/>
+                                <Slider x:Name="HorizontalOffsetSlider"
+                                        Grid.Column="1"
+                                        Minimum="-200"
+                                        Maximum="200"
+                                        Value="18"
+                                        TickFrequency="1"
+                                        IsSnapToTickEnabled="True"
+                                        ValueChanged="HorizontalOffsetSlider_ValueChanged"/>
+                                <TextBlock x:Name="HorizontalOffsetValueText"
+                                           Grid.Column="2"
+                                           Text="+18 px"
+                                           VerticalAlignment="Center"
+                                           HorizontalAlignment="Right"
+                                           Foreground="#A7B4C8"
+                                           FontSize="12"/>
+                            </Grid>
+
+                            <Grid MinHeight="40" Margin="0,6,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="184"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="70"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Vertical offset (Y)"
+                                           VerticalAlignment="Center"
+                                           Foreground="#D5DEEB"
+                                           FontSize="13"/>
+                                <Slider x:Name="VerticalOffsetSlider"
+                                        Grid.Column="1"
+                                        Minimum="-200"
+                                        Maximum="200"
+                                        Value="18"
+                                        TickFrequency="1"
+                                        IsSnapToTickEnabled="True"
+                                        ValueChanged="VerticalOffsetSlider_ValueChanged"/>
+                                <TextBlock x:Name="VerticalOffsetValueText"
+                                           Grid.Column="2"
+                                           Text="+18 px"
+                                           VerticalAlignment="Center"
+                                           HorizontalAlignment="Right"
+                                           Foreground="#A7B4C8"
+                                           FontSize="12"/>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+
+                    <TextBlock Grid.Row="4"
+                               Margin="0,18,0,0"
+                               Text="Tip: Start the overlay, then use your keyboard and mouse normally. Your actions will appear near the cursor while you record."
+                               Foreground="#8291A8"
+                               TextWrapping="Wrap"
+                               FontSize="12"/>
                 </Grid>
-
-                <Border Grid.Row="1" Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="10" Padding="12,10" Margin="0,0,0,18">
-                    <StackPanel Orientation="Horizontal">
-                        <Ellipse Width="8" Height="8" Fill="#64748B" Margin="0,0,10,0" VerticalAlignment="Center"/>
-                        <TextBlock x:Name="StatusText" Text="Overlay stopped" Foreground="#475569" FontSize="14" FontWeight="SemiBold" VerticalAlignment="Center"/>
-                    </StackPanel>
-                </Border>
-
-                <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,0,0,18">
-                    <Button x:Name="ToggleButton"
-                            Width="170"
-                            Height="42"
-                            Content="Start Overlay"
-                            Style="{StaticResource PrimaryButtonStyle}"
-                            Click="ToggleButton_Click"/>
-                    <Button Width="96"
-                            Height="42"
-                            Margin="12,0,0,0"
-                            Content="Exit"
-                            Style="{StaticResource SecondaryButtonStyle}"
-                            Click="ExitButton_Click"/>
-                </StackPanel>
-
-                <Border Grid.Row="3" BorderThickness="1" BorderBrush="#E2E8F0" CornerRadius="14" Padding="16" Background="#F8FAFC">
-                    <StackPanel>
-                        <TextBlock Text="Display" FontSize="17" FontWeight="SemiBold" Foreground="#111827" Margin="0,0,0,12"/>
-                        <TextBlock Text="Configure how actions appear next to your cursor." Foreground="#475569" FontSize="12" Margin="0,0,0,12"/>
-
-                        <Grid Margin="0,2,0,0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="150"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="52"/>
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Text="Text size" VerticalAlignment="Center" Foreground="#334155" FontSize="13"/>
-                            <Slider x:Name="TextSizeSlider" Grid.Column="1" Minimum="18" Maximum="42" Value="28" TickPlacement="BottomRight" IsSnapToTickEnabled="True" ValueChanged="TextSizeSlider_ValueChanged"/>
-                            <TextBlock x:Name="TextSizeValueText" Grid.Column="2" Text="28 px" Foreground="#475569" FontSize="12" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-                        </Grid>
-
-                        <Grid Margin="0,8,0,0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="150"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="52"/>
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Text="Opacity" VerticalAlignment="Center" Foreground="#334155" FontSize="13"/>
-                            <Slider x:Name="OpacitySlider" Grid.Column="1" Minimum="0.4" Maximum="1" Value="0.9" TickPlacement="BottomRight" ValueChanged="OpacitySlider_ValueChanged"/>
-                            <TextBlock x:Name="OpacityValueText" Grid.Column="2" Text="90%" Foreground="#475569" FontSize="12" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-                        </Grid>
-
-                        <Grid Margin="0,8,0,0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="150"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="52"/>
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Text="Display duration" VerticalAlignment="Center" Foreground="#334155" FontSize="13"/>
-                            <Slider x:Name="DisplayDurationSlider" Grid.Column="1" Minimum="0.6" Maximum="3" Value="1.2" TickPlacement="BottomRight" ValueChanged="DisplayDurationSlider_ValueChanged"/>
-                            <TextBlock x:Name="DisplayDurationValueText" Grid.Column="2" Text="1.2 s" VerticalAlignment="Center" HorizontalAlignment="Right" Foreground="#475569" FontSize="12"/>
-                        </Grid>
-
-                        <Grid Margin="0,8,0,0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="150"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="58"/>
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Text="Horizontal offset (X)" VerticalAlignment="Center" Foreground="#334155" FontSize="13"/>
-                            <Slider x:Name="HorizontalOffsetSlider" Grid.Column="1" Minimum="-200" Maximum="200" Value="18" TickFrequency="1" IsSnapToTickEnabled="True" ValueChanged="HorizontalOffsetSlider_ValueChanged"/>
-                            <TextBlock x:Name="HorizontalOffsetValueText" Grid.Column="2" Text="+18 px" VerticalAlignment="Center" HorizontalAlignment="Right" Foreground="#475569" FontSize="12"/>
-                        </Grid>
-
-                        <Grid Margin="0,8,0,0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="150"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="58"/>
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Text="Vertical offset (Y)" VerticalAlignment="Center" Foreground="#334155" FontSize="13"/>
-                            <Slider x:Name="VerticalOffsetSlider" Grid.Column="1" Minimum="-200" Maximum="200" Value="18" TickFrequency="1" IsSnapToTickEnabled="True" ValueChanged="VerticalOffsetSlider_ValueChanged"/>
-                            <TextBlock x:Name="VerticalOffsetValueText" Grid.Column="2" Text="+18 px" VerticalAlignment="Center" HorizontalAlignment="Right" Foreground="#475569" FontSize="12"/>
-                        </Grid>
-                    </StackPanel>
-                </Border>
-
-                <TextBlock Grid.Row="4" Margin="0,18,0,0" Text="Tip: Start the overlay, then use your keyboard and mouse normally. Your actions will appear near the cursor while you record." Foreground="#64748B" TextWrapping="Wrap" FontSize="12"/>
-            </Grid>
-        </Border>
-    </Grid>
+            </Border>
+        </Grid>
+    </ScrollViewer>
 </Window>

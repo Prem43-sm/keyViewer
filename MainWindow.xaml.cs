@@ -1,4 +1,6 @@
+using System.Runtime.InteropServices;
 using System.Windows;
+using System.Windows.Interop;
 using System.Windows.Media;
 using KeyboardMouseOverlay.Core;
 using KeyboardMouseOverlay.Models;
@@ -9,6 +11,9 @@ namespace KeyboardMouseOverlay;
 
 public partial class MainWindow : Window
 {
+    private const int DwmwaUseImmersiveDarkMode = 20;
+    private const int DwmwaUseImmersiveDarkModeBeforeWindows11 = 19;
+
     private readonly OverlaySettings _settings;
     private readonly InputMonitor _inputMonitor;
     private readonly OverlayWindow _overlayWindow;
@@ -35,8 +40,30 @@ public partial class MainWindow : Window
         OpacityValueText.Text = $"{_settings.Opacity:P0}";
 
         ToggleButton.Content = "Start Overlay";
-        SetStatus("Overlay stopped", "#475569");
+        SetStatus("Overlay stopped", "#94A3B8");
         _overlayWindow.Hide();
+    }
+
+    protected override void OnSourceInitialized(EventArgs e)
+    {
+        base.OnSourceInitialized(e);
+
+        var windowHandle = new WindowInteropHelper(this).Handle;
+        var darkModeEnabled = 1;
+        var result = DwmSetWindowAttribute(
+            windowHandle,
+            DwmwaUseImmersiveDarkMode,
+            ref darkModeEnabled,
+            sizeof(int));
+
+        if (result != 0)
+        {
+            DwmSetWindowAttribute(
+                windowHandle,
+                DwmwaUseImmersiveDarkModeBeforeWindows11,
+                ref darkModeEnabled,
+                sizeof(int));
+        }
     }
 
     private void ToggleButton_Click(object sender, RoutedEventArgs e)
@@ -62,7 +89,7 @@ public partial class MainWindow : Window
             _inputMonitor.Start();
             _isRunning = true;
             ToggleButton.Content = "Stop Overlay";
-            SetStatus("Overlay running", "#15803D");
+            SetStatus("Overlay running", "#4ADE80");
             _settings.OverlayEnabled = true;
             SettingsService.Save(_settings);
         }
@@ -70,7 +97,7 @@ public partial class MainWindow : Window
         {
             global::System.Windows.MessageBox.Show($"Unable to start the global hook: {ex.Message}", "KeyViewer", MessageBoxButton.OK, MessageBoxImage.Warning);
             _isRunning = false;
-            SetStatus("Start failed", "#B91C1C");
+            SetStatus("Start failed", "#F87171");
         }
     }
 
@@ -79,7 +106,7 @@ public partial class MainWindow : Window
         _inputMonitor.Stop();
         _isRunning = false;
         ToggleButton.Content = "Start Overlay";
-        SetStatus("Overlay stopped", "#475569");
+        SetStatus("Overlay stopped", "#94A3B8");
         _overlayWindow.Hide();
     }
 
@@ -178,7 +205,9 @@ public partial class MainWindow : Window
     private void SetStatus(string statusText, string colorHex)
     {
         StatusText.Text = statusText;
-        StatusText.Foreground = new SolidColorBrush((System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString(colorHex)!);
+        var statusBrush = new SolidColorBrush((System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString(colorHex)!);
+        StatusText.Foreground = statusBrush;
+        StatusIndicator.Fill = statusBrush;
     }
 
     protected override void OnClosed(EventArgs e)
@@ -187,4 +216,11 @@ public partial class MainWindow : Window
         _inputMonitor.Dispose();
         _overlayWindow.Close();
     }
+
+    [DllImport("dwmapi.dll")]
+    private static extern int DwmSetWindowAttribute(
+        IntPtr windowHandle,
+        int attribute,
+        ref int attributeValue,
+        int attributeSize);
 }

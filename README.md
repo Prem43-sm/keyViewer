@@ -4,6 +4,11 @@
 
 A lightweight Windows WPF utility that displays keyboard shortcuts, mouse clicks, and scroll actions near the cursor for screen recordings.
 
+<img width="842" height="905" alt="image" src="https://github.com/user-attachments/assets/bb9d32dd-65a5-429b-83fe-f5089a2b4d3d" /> 
+<img width="161" height="95" alt="image" src="https://github.com/user-attachments/assets/9acd368d-d1f5-4c0e-b0d0-588406188e89" />
+
+
+
 ## Requirements
 
 - Windows 10 or 11 (64-bit)

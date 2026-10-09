@@ -1,5 +1,5 @@
 #define AppName "KeyViewer"
-#define AppVersion "1.0.0"
+#define AppVersion "1.1.0"
 #define AppPublisher "KeyViewer"
 #define AppExeName "KeyboardMouseOverlay.exe"
 #define PublishDir "..\artifacts\publish\win-x64"
